@@ -1,33 +1,43 @@
-# <p align=center> DyGCN : Geometry-Constrained Dynamic Hypergraph Convolutional Network with Contrastive Score Refinement for Skeleton-Based Action Recognition </p>
+# Hyper-GCN
+This repo is the official implementation for [Adaptive Hyper-Graph Convolution Network for Skeleton-based Human Action Recognition with Virtual Connections](https://arxiv.org/pdf/2411.14796). The paper is accepted to ICCV 2025.
 
+# Illustration
+<div align='center'>
+   <img src="./assets/illustration.png" width="500"/><br>
+</div>
+<!-- ![Illustration](./assets/illustration.png) -->
 
-> **Abstract:** *Skeleton-based action recognition is a pivotal task in computer vision; however, conventional Graph Convolutional Networks (GCNs) are often constrained by pairwise joint modeling, which fails to capture the intricate high-order interactions inherent in human movement. While recent hypergraph-based methods attempt to address this limitation, they typically rely on static structures derived from anatomical priors, lacking the flexibility to capture dynamic, action-specific joint correlations. To this end, we propose DyGCN, a Geometry-Constrained Dynamic Hypergraph Convolutional Network for skeleton-based action recognition. At the core of DyGCN is the Dynamic Hypergraph Construction Network with Contrastive Score Refinement (DyGCT) block, which comprises two novel components: the Geometry-Constrained Dynamic Hypergraph Construction (GeoHC) module and the Contrastive Score Refinement (CSR) module. Specifically, GeoHC dynamically constructs action-specific hyperedges by leveraging geometry-constrained second-order compatibility, transcending the limitations of static hyperedge structures. Furthermore, CSR explicitly refines the pairwise compatibility scores during hypergraph construction through prototype-based contrastive learning, fostering more discriminative action-specific hyperedges — with zero inference-time overhead as CSR operates only during training. Extensive experiments on NTU RGB+D, NTU RGB+D 120, and Northwestern-UCLA validate the effectiveness of DyGCN, achieving state-of-the-art performance on widely used benchmarks.* 
+**Illustration of Hyper-GCN.** 
+In (a), dotted lines represent the virtualconnections. Each coloured part containing multiple joints represents a hyper-graph with hyper-edges. 
+(b) provides an intuitive comparison between normal graph convolution and hyper-graph convolution operations with the same connectivity degree.
 
-<p align="center">
-    <img src="image/fig3.jpg"  width="1000"/> <br />
-    <em> 
-    Figure 1: Overview of the Spectral Scalpel framework..
-    </em>
-</p>
+# Framework
+<div align='center'>
+   <img src="./assets/framework.png"/><br>
+</div>
 
+**The framework of Hyper-GCN.**
+Part (a) represents the Multi-head Hyper-graph Convolution (M-HGC) module.
+Part (b) represents the process of constructing an adaptive hyper-graph.
+Part (c) represents the architecture of Hyper-GCN.
 
-<p align="center">
-    <img src="image/fig4.jpg"  width="1000"/> <br />
-    <em> 
-    Figure 2: Illustration of the three core components.
-    </em>
-</p>
+# Visualization
+| ![Drink water](./assets/A001P001.gif) | ![Stand up](./assets/A009P003.gif) | ![Clapping](./assets/A010P001.gif) | ![Jump up](./assets/A027P003.gif) |
+|:------------:|:------------:|:------------:|:------------:|
+|*Drink water*|*Stand up*|*Clapping*|*Jump up*|
+| ![Neck pain](./assets/A047P001.gif) | ![Wipe face](./assets/A037P003.gif) | ![Hopping](./assets/A026P001.gif) | ![Kicking something](./assets/A024P003.gif) |
+|*Neck pain*|*Wipe face*|*Hopping*|*Kicking something*|
 
-
+There are some selected actions for visualizing the hyper-graph constructed by Hyper-GCN.
 
 # Prerequisites
+- Python == 3.9
+- PyTorch == 1.13.0
+- torchpack == 0.2.2
+- numpy == 1.26.4
+- PyYAML, tqdm, tensorboardX, matplotlib, sklearn, h5py
 
-- Python >= 3.6
-- PyTorch >= 1.1.0
-- PyYAML, tqdm, tensorboardX
-
-- We provide the dependency file of our experimental environment, you can install all dependencies by creating a new anaconda virtual environment and running `pip install -r requirements.txt `
-- Run `pip install -e torchlight` 
+We provide the dependency file of our experimental environment, you can install all dependencies by creating a new anaconda virtual environment and running `pip install -r requirements.txt `
 
 # Data Preparation
 
@@ -92,35 +102,48 @@ Put downloaded data into the following directory structure:
 
 ### Training
 
-- Change the config file depending on what you want.
+- We provide the training configs for base and large version in 4 modalities (joint, bone, joint motion and bone motion) for each benchmark. 
+You can change the config file depending on what you want. As a example for base version on NTU120 X-Sub with device 0:
 
 ```
-# Example: training SemanticsGCL on NTU RGB+D 120 cross subject with GPU 0
-python main.py --config config/nturgbd120-cross-subject/default.yaml --work-dir work_dir/ntu120/csub/semanticsGCL --device 0
-# Example: training provided baseline on NTU RGB+D 120 cross subject
-python main.py --config config/nturgbd120-cross-subject/default.yaml --model model.baseline.Model--work-dir work_dir/ntu120/csub/baseline --device 0
+# train for modality joint
+python main.py --config config/base/nturgbd120-cross-subject/hyper_joint.yaml --work-dir <the save path of results> --device 0
+# train for modality bone
+python main.py --config config/base/nturgbd120-cross-subject/hyper_bone.yaml --work-dir <the save path of results> --device 0
+# train for modality joint motion
+python main.py --config config/base/nturgbd120-cross-subject/hyper_joint_motion.yaml --work-dir <the save path of results> --device 0
+# train for modality bone motion
+python main.py --config config/base/nturgbd120-cross-subject/hyper_bone_motion.yaml --work-dir <the save path of results> --device 0
 ```
 
-- To train model on NTU RGB+D 60/120 with bone or motion modalities, setting `bone` or `vel` arguments in the config file `default.yaml` or in the command line.
+### Testing
+
+- You can test the trained models saved in `<the save path of results>` as the follow command:
 
 ```
-# Example: training semanticsGCL on NTU RGB+D 120 cross subject under bone modality
-python main.py --config config/nturgbd120-cross-subject/default.yaml --train_feeder_args bone=True --test_feeder_args bone=True --work-dir work_dir/ntu120/csub/semanticsGCL_bone --device 0
+python main.py --config <the save path of results>/config.yaml --work-dir <the save path of results> --phase test --save-score True --weights <the save path of results>/xxx.pt --device 0
 ```
 
-- To train model on NW-UCLA with bone or motion modalities, you need to modify `data_path` in `train_feeder_args` and `test_feeder_args` to "bone" or "motion" or "bone motion", and run
+- If you want to ensemble the results of 4 modalities for the final result, run the following command (As a example for base version on NTU120 X-Sub): 
+```
+python ensemble.py --datasets ntu120/xsub --model base --joint-dir <the save path of result on joint> --bone-dir <the save path of result on bone> --joint-motion-dir <the save path of result on joint motion> --bone-motion-dir <the save path of result on bone motion>
+```
 
-```
-python main.py --config config/ucla/default.yaml --work-dir work_dir/ucla/semanticsGCL_xxx --device 0
-```
+# Pretrained Models
 
-- To train your own model, put model file `your_model.py` under `./model` and run:
+We provide the pretrained weights, configs and training logs. 
+You can download pretrained models for producing the final results on NTU 60 & 120 in [Google Drive](https://drive.google.com/drive/folders/1Zi6l8NL_mp7I7v8FjizlRNTk7wZlNfkQ?usp=sharing).
 
-```
-# Example: training your own model on NTU RGB+D 120 cross subject
-python main.py --config config/nturgbd120-cross-subject/default.yaml --model model.your_model.Model --work-dir work_dir/ntu120/csub/your_model --device 0
-```
 ## Acknowledgements
 
-This repo is based on [CTR-GCN](https://github.com/Uason-Chen/CTR-GCN/tree/main) . The data processing is borrowed from [SGN](https://github.com/microsoft/SGN) and [HCN](https://github.com/huguyuehuhu/HCN-pytorch). Many thanks to the original authors for their work!
+- This repo is based on [CTR-GCN](https://github.com/Uason-Chen/CTR-GCN).
 
+- The data processing is borrowed from [SGN](https://github.com/microsoft/SGN) and [HCN](https://github.com/huguyuehuhu/HCN-pytorch).
+
+- The training strategy is referenced from [BlockGCN](https://github.com/ZhouYuxuanYX/BlockGCN), [SkateFormer](https://github.com/KAIST-VICLab/SkateFormer/tree/main) and [PYSKL](https://github.com/kennymckormick/pyskl)
+
+Thanks to the original authors for their work!
+
+
+# Contact
+For any questions, feel free to contact: `youwei_zhou@stu.jiangnan.edu.cn`
