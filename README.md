@@ -114,7 +114,7 @@ python main.py --config <work_dir>/config.yaml --work-dir <work_dir> --phase tes
 - To ensemble the results of different modalities, run 
 ```
 # Example: ensemble four modalities of DyGCN on NTU RGB+D cross subject
-python ensemble.py --dataset ntu/xsub \
+python ensemble_test.py --dataset ntu/xsub \
 --joint-dir work_dir/ntu/xsub/joint \
 --bone-dir work_dir/ntu/xsub/bone \
 --joint-motion-dir work_dir/ntu/xsub/joint_motion \
