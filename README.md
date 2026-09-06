@@ -18,8 +18,10 @@
     </em>
 </p>
 
-
-
+# Visualization
+| ![Brush Hair](./image/brushhair.gif) | ![Drink water](./image/drinkwater.gif) | ![Stand up](./image/standup.gif) |
+|:------------:|:------------:|:------------:|:------------:|
+|*Brush Hair*|*Drink water*|*Stand up*|
 # Prerequisites
 
 - Python >= 3.6
