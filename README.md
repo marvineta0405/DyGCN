@@ -19,9 +19,22 @@
 </p>
 
 # Visualization
-| ![Brush Hair](./image/brushhair.gif) | ![Drink water](./image/drinkwater.gif) | ![Stand up](./image/standup.gif) |
-|:------------:|:------------:|:------------:|:------------:|
-|*Brush Hair*|*Drink water*|*Stand up*|
+<table>
+  <tr>
+    <td align="center">
+      <img src="./image/brushhair.gif" width="250"><br>
+      <i>Brush Hair</i>
+    </td>
+    <td align="center">
+      <img src="./image/drinkwater.gif" width="250"><br>
+      <i>Drink Water</i>
+    </td>
+    <td align="center">
+      <img src="./image/standup.gif" width="250"><br>
+      <i>Stand Up</i>
+    </td>
+  </tr>
+</table>
 # Prerequisites
 
 - Python >= 3.6
