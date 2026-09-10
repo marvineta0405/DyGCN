@@ -4,7 +4,7 @@
 > **Abstract:** *Skeleton-based action recognition is a pivotal task in computer vision; however, conventional Graph Convolutional Networks (GCNs) are often constrained by pairwise joint modeling, which fails to capture the intricate high-order interactions inherent in human movement. While recent hypergraph-based methods attempt to address this limitation, they typically rely on static structures derived from anatomical priors, lacking the flexibility to capture dynamic, action-specific joint correlations. To this end, we propose DyGCN, a Geometry-Constrained Dynamic Hypergraph Convolutional Network for skeleton-based action recognition. At the core of DyGCN is the Dynamic Hypergraph Construction Network with Contrastive Score Refinement (DyGCT) block, which comprises two novel components: the Geometry-Constrained Dynamic Hypergraph Construction (GeoHC) module and the Contrastive Score Refinement (CSR) module. Specifically, GeoHC dynamically constructs action-specific hyperedges by leveraging geometry-constrained second-order compatibility, transcending the limitations of static hyperedge structures. Furthermore, CSR explicitly refines the pairwise compatibility scores during hypergraph construction through prototype-based contrastive learning, fostering more discriminative action-specific hyperedges — with zero inference-time overhead as CSR operates only during training. Extensive experiments on NTU RGB+D, NTU RGB+D 120, and Northwestern-UCLA validate the effectiveness of DyGCN, achieving state-of-the-art performance on widely used benchmarks.* 
 
 <p align="center">
-    <img src="image/dyGCN.png"  width="800"/> <br />
+    <img src="image/dyGCN.png"  width="600"/> <br />
     <em> 
     Figure 1: Overview of the DyGCN framework..
     </em>
@@ -12,7 +12,7 @@
 
 
 <p align="center">
-    <img src="image/dyGCT.png"  width="1000"/> <br />
+    <img src="image/dyGCT.png"  width="800"/> <br />
     <em> 
     Figure 2: The framework of the DyGCT block, comprising the Geometry-Constrained Dynamic Hypergraph Construction (GeoHC) module and the Contrastive Score Refinement (CSR) module.
     </em>
