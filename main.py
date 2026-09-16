@@ -282,7 +282,7 @@ class Processor():
         #print(self.model)
         self.loss = nn.CrossEntropyLoss(label_smoothing=0.1).cuda(output_device)
         
-        self.csc_loss = Class_Specific_Contrastive_Loss(n_class = self.arg.model_args["num_class"], n_channel = 625).cuda(output_device)
+        self.csc_loss = Refinment_loss(n_class = self.arg.model_args["num_class"], n_channel = 625).cuda(output_device)
 
         if self.arg.weights:
             self.global_step = int(arg.weights[:-3].split('-')[-1])
