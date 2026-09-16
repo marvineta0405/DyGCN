@@ -5,16 +5,10 @@ import torch.nn.functional as F
 from torch import einsum
 import numpy as np
 
-
-"""
-*******************************************
-*** Class-Specific Contrastive Learning ***
-*******************************************
-"""  
-class Class_Specific_Contrastive_Loss(nn.Module):
+class Refinment_loss(nn.Module):
     
     def __init__(self, n_class, n_channel=625, h_channel=256, tmp=0.125, mom=0.9, pred_threshold=0.0):
-        super(Class_Specific_Contrastive_Loss, self).__init__()
+        super(Refinment_loss, self).__init__()
         self.n_channel = n_channel
         self.h_channel = h_channel
         self.n_class = n_class
